@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Jam Blocks</title>
+	<meta charset="utf-8" />
+	<script src ='js/blockly/blockly_compressed.js' type='text/javascript'></script>
+	<script src ='js/blockly/blocks_compressed.js' type='text/javascript'></script>
+    <script src ='js/blockly/msg/js/en.js' type='text/javascript'></script>
+	<script src ='js/blockly/javascript_compressed.js' type='text/javascript'></script>
+	<script src ='js/blockly/generators/javascript/jam.js' type='text/javascript'></script>
+	<script src ='js/blockly/blocks/jam.js' type='text/javascript'></script>
+	<script src ='js/midijs/inc/shim/Base64.js' type="text/javascript"></script>
+	<script src ='js/midijs/inc/shim/Base64binary.js' type="text/javascript"></script>
+	<script src ='js/midijs/inc/shim/WebAudioAPI.js' type="text/javascript"></script>
+	<!-- midi.js package -->
+	<script src ='js/midijs/js/midi/audioDetect.js' type="text/javascript"></script>
+	<script src ='js/midijs/js/midi/gm.js' type="text/javascript"></script>
+	<script src ='js/midijs/js/midi/loader.js' type="text/javascript"></script>
+	<script src ='js/midijs/js/midi/plugin.audiotag.js' type="text/javascript"></script>
+	<script src ='js/midijs/js/midi/plugin.webaudio.js' type="text/javascript"></script>
+	<script src ='js/midijs/js/midi/plugin.webmidi.js' type="text/javascript"></script>
+	<!-- utils -->
+	<script src ='js/midijs/js/util/dom_request_xhr.js'  type="text/javascript"></script>
+	<script src ='js/midijs/js/util/dom_request_script.js' type="text/javascript"></script>
+	<!-- VexFlow package -->
+	<script src ='js/vexflow-master/releases/vexflow-min.js' type="text/javascript"></script>
+	<!-- JQuery package -->
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>	
+	<style type ="text/css">
+	#blocklyDiv {
+		float: left;
+	}
+	#musicsheet{
+		float: right;
+	}
+	canvas {
+		background: #eed
+		padding: 10px;
+		border: 10px solid #ddc;
+	}
+	
+	</style>
+</head>
+
+<body class="body style="background-color:#f6f6f6>
+
+<p>
+      <div class="ey" example="lamo">
+		<canvas id="yoy" width=525 height=100></canvas>
+      </div>
+	  
+   <p>Test buttons</p>
+   <button onclick="showCode()">Show JavaScript</button>
+   <button onclick="runCode()">Run JavaScript</button>
+   <button onclick="createStave()">Create Stave</button>
+</p>
+<section>
+	<div id="blocklyDiv" style="height: 800px; width: 800px;"></div>
+<xml id="toolbox" style="display: none">
+	<category name="Measure">
+		<block type="jam_measure"></block>
+	</category>
+	<category name="Instruments">
+		<block type="jam_instrument"></block>
+	</category>
+	<category name="Container">
+		<block type="math_arithmetic"></block>
+		<block type="text"></block>
+		<block type="controls_for"</block>
+	</category>
+	<category name="Notes">
+		<block type="jam_note"></block>
+		
+	</category>
+</xml>
+</section>
+
+<section>
+
+
+<div id="musicsheet">
+</div>
+<script>
+	var workspace = Blockly.inject('blocklyDiv',
+      {toolbox: document.getElementById('toolbox')});
+	  
+    function showCode() {
+      // Generate JavaScript code and display it.
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+	  alert(code);
+    }
+
+    function runCode() {
+      // Generate JavaScript code and run it.
+      window.LoopTrap = 1000;
+      Blockly.JavaScript.INFINITE_LOOP_TRAP =
+          'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      try {
+        eval(code);
+      } catch (e) {
+        alert(e);
+      }
+	}
+	function createStave() {
+		
+
+		var canvas = $("#yoy")[0];
+		var renderer = new Vex.Flow.Renderer(canvas,
+			Vex.Flow.Renderer.Backends.CANVAS);
+		var ctx = renderer.getContext();
+		var stave = new Vex.Flow.Stave(10, 0, 500);
+		stave.addClef("treble").setContext(ctx).draw();
+		  // Create the notes
+		var notes = [
+			// A quarter-note C.
+			new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+
+			// A quarter-note D.
+			new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+
+			// A quarter-note rest. Note that the key (b/4) specifies the vertical
+			// position of the rest.
+			new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }),
+
+			// A C-Major chord.
+			new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
+		];
+		 var notes2 = [
+		new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "h" }),
+		new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+		new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "q" }).
+			addAccidental(0, new Vex.Flow.Accidental("b")),
+			
+		];
+  // Create a voice in 4/4
+  var voice = new Vex.Flow.Voice({
+    num_beats: 4, //Time signature
+    beat_value: 4, 
+    resolution: Vex.Flow.RESOLUTION
+  });
+  var voice2 = new Vex.Flow.Voice({
+	num_beats: 4,
+	beat_value: 4,
+	resolution: Vex.Flow.RESOLUTION
+  });
+
+  // Add notes to voice
+	voice.addTickables(notes);
+	voice2.addTickables(notes2);
+  // Format and justify the notes to 500 pixels
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice, voice2]).format([voice, voice2], 500);
+
+  // Render voice
+	voice.draw(ctx, stave);
+    voice2.draw(ctx, stave);    
+	}
+	
+  </script>
+</section>
+</body>
+
+</html>

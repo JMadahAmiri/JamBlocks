@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Jam Blocks</title>
+	<meta charset="utf-8" />
+	<script src ='../js/blockly/blockly_compressed.js' type='text/javascript'></script>
+	<script src ='../js/blockly/blocks_compressed.js' type='text/javascript'></script>
+    <script src ='../js/blockly/msg/js/en.js' type='text/javascript'></script>
+	<script src ='../js/blockly/javascript_compressed.js' type='text/javascript'></script>
+	<script src ='../js/blockly/generators/javascript/jam.js' type='text/javascript'></script>
+	<script src ='../js/blockly/blocks/jam.js' type='text/javascript'></script>
+	<script src ='../js/midijs/inc/shim/Base64.js' type="text/javascript"></script>
+	<script src ='../js/midijs/inc/shim/Base64binary.js' type="text/javascript"></script>
+	<script src ='../js/midijs/inc/shim/WebAudioAPI.js' type="text/javascript"></script>
+	<!-- midi.js package -->
+	<script src ='../js/midijs/js/midi/audioDetect.js' type="text/javascript"></script>
+	<script src ='../js/midijs/js/midi/gm.js' type="text/javascript"></script>
+	<script src ='../js/midijs/js/midi/loader.js' type="text/javascript"></script>
+	<script src ='../js/midijs/js/midi/plugin.audiotag.js' type="text/javascript"></script>
+	<script src ='../js/midijs/js/midi/plugin.webaudio.js' type="text/javascript"></script>
+	<script src ='../js/midijs/js/midi/plugin.webmidi.js' type="text/javascript"></script>
+	<!-- Vexflow package -->
+	
+	<!-- utils -->
+	<script src ='../js/midijs/js/util/dom_request_xhr.js'  type="text/javascript"></script>
+	<script src ='../js/midijs/js/util/dom_request_script.js' type="text/javascript"></script>
+	<style type ="text/css">
+	#blocklyDiv {
+		float: left;
+	}
+	#musicsheet{
+		float: right;
+	}
+	</style>
+</head>
+
+<body class="body style="background-color:#f6f6f6>
+<p>Test buttons</p>
+<p>
+    <button onclick="showCode()">Show JavaScript</button>
+    <button onclick="runCode()">Run JavaScript</button>
+</p>
+<section>
+	<div id="blocklyDiv" style="height: 800px; width: 800px;"></div>
+<xml id="toolbox" style="display: none">
+	<category name="Measure">
+		<block type="jam_measure"></block>
+	</category>
+	<category name="Instruments">
+		<block type="jam_instrument"></block>
+	</category>
+	<category name="Container">
+		<block type="math_arithmetic"></block>
+		<block type="text"></block>
+		<block type="controls_for"</block>
+	</category>
+	<category name="Notes">
+		<block type="jam_note"></block>
+		
+	</category>
+</xml>
+</section>
+
+<section>
+<div id="musicsheet">
+<img src="../images/MusicStaff.jpeg" alt="music sheet" width="600" height="600">
+</div>
+<script>
+	var workspace = Blockly.inject('blocklyDiv',
+      {toolbox: document.getElementById('toolbox')});
+	  
+    function showCode() {
+      // Generate JavaScript code and display it.
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+	  alert(code);
+    }
+
+    function runCode() {
+      // Generate JavaScript code and run it.
+      window.LoopTrap = 1000;
+      Blockly.JavaScript.INFINITE_LOOP_TRAP =
+          'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      try {
+        eval(code);
+      } catch (e) {
+        alert(e);
+      }
+    }
+  </script>
+
+</body>
+
+</html>
