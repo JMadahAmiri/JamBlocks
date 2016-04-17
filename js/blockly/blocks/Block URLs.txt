@@ -1,0 +1,4 @@
+Start: https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#p67geg
+Measure: https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#nhqj3j
+Instrument: https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#8duji7
+Note: https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#t4r56r
