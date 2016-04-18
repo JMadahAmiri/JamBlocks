@@ -24,6 +24,7 @@
  */
 'use strict';
 goog.require('Blockly.JavaScript');
+var delay = 0;
 
 Blockly.JavaScript['jam_measure'] = function(block) {
   var dropdown_time_sig = block.getFieldValue('TIME_SIG');
@@ -39,24 +40,35 @@ Blockly.JavaScript['jam_instrument'] = function(block) {
   var dropdown_clef_selection = block.getFieldValue('clef_selection');
   var branch = Blockly.JavaScript.statementToCode(block, 'MEASURE');
   // TODO: Assemble JavaScript into code variable.
+  
   var code ='MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +
-			branch;
+			branch +
+			'delay = 0;';
   return code;
 };
 
 Blockly.JavaScript['jam_note'] = function(block) {
   var note = block.getFieldValue('NOTE');
   var register = block.getFieldValue('REGISTER');
+  var key = note + register;
+var number = 60; //Start from middle C(C4) and move from there to the note number;
+if(register == 5){
+	number += 12; //Move up one octave
+}
+else if(register == 3){
+	number -= 12; //Move down one octave
+} 
+
   var volume = block.getFieldValue('VOLUME');
   var length = block.getFieldValue('LENGTH');
   // TODO: Assemble JavaScript into code variable.
   var code =
-			'var delay = 0; ' + // play one note every quarter second
-			'var note = 50; ' + // the MIDI note
+			'var note = ' + number + '; ' + // the MIDI note
 			'var velocity = 127; ' + // how hard the note hits
 			// play the note
 			'MIDI.setVolume(0, 127);' +
 			'MIDI.noteOn(0, note, velocity, delay);' +
-			'MIDI.noteOff(0, note, delay + 0.75);'
+			'MIDI.noteOff(0, note, delay + 0.75);' +
+			'delay++;'
   return code;
 };

@@ -69,16 +69,16 @@ Blockly.Blocks['jam_note'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Note")
-        .appendField(new Blockly.FieldDropdown([["A", "N_A"], ["B", "N_B"], ["C", "N_C"], ["D", "N_D"], ["E", "N_E"], ["F", "N_F"], ["G", "N_G"]]), "NOTE");
+        .appendField(new Blockly.FieldDropdown([["A", "A"], ["A#", "A#"], ["B", "B"], ["C", "C"], ["C#", "C#"], ["D", "D"], ["D#", "D#"], ["E", "E"], ["F", "F"], ["F#", "F#"], ["G", "G"], ["G#", "G#"], ["Rest", "R"]]), "NOTE");
     this.appendDummyInput()
         .appendField("Register")
-        .appendField(new Blockly.FieldDropdown([["High", "HIGH"], ["Middle", "MIDDLE"], ["Low", "LOW"]]), "REGISTER");
+        .appendField(new Blockly.FieldDropdown([["High", "5"], ["Middle", "4"], ["Low", "3"]]), "REGISTER");
     this.appendDummyInput()
         .appendField("Volume")
-        .appendField(new Blockly.FieldDropdown([["100", "V_100"], ["90", "V_90"], ["80", "V_80"]]), "VOLUME");
+        .appendField(new Blockly.FieldDropdown([["100", "V_100"], ["90", "V_90"], ["80", "V_80"], ["70", "V_70"]]), "VOLUME");
     this.appendDummyInput()
         .appendField("Length")
-        .appendField(new Blockly.FieldDropdown([["1/8", "EIGHTH"], ["1/4", "QUARTER"], ["1/2", "HALF"], ["1", "WHOLE"], ["Rest", "REST"]]), "LENGTH");
+        .appendField(new Blockly.FieldDropdown([["1/8", "EIGHTH"], ["1/4", "QUARTER"], ["1/2", "HALF"], ["1", "WHOLE"]]), "LENGTH");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
