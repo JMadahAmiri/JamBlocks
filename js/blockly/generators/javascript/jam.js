@@ -28,42 +28,35 @@ goog.require('Blockly.JavaScript');
 Blockly.JavaScript['jam_measure'] = function(block) {
   var dropdown_time_sig = block.getFieldValue('TIME_SIG');
   var value_containter = Blockly.JavaScript.valueToCode(block, 'CONTAINTER', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_notes = Blockly.JavaScript.valueToCode(block, 'NOTES', Blockly.JavaScript.ORDER_ATOMIC);
-  // TODO: Assemble JavaScript into code variable.
-  var code = '...';
-  // TODO: Change ORDER_NONE to the correct strength.
-  return [code, Blockly.JavaScript.ORDER_NONE];
-};
-
-Blockly.JavaScript['jam_instrument'] = function(block) {
-  var dropdown_instrument_selection = block.getFieldValue('instrument_selection');
-  var dropdown_clef_selection = block.getFieldValue('clef_selection');
-  var value_measure = Blockly.JavaScript.valueToCode(block, 'MEASURE', Blockly.JavaScript.ORDER_ATOMIC);
+  var statements_name = Blockly.JavaScript.statementToCode(block, 'NAME');
   // TODO: Assemble JavaScript into code variable.
   var code = '...;\n';
   return code;
 };
 
-Blockly.JavaScript['jam_note'] = function(block) {
-  var dropdown_note = block.getFieldValue('NOTE');
-  var dropdown_register = block.getFieldValue('REGISTER');
-  var dropdown_volume = block.getFieldValue('VOLUME');
-  var dropdown_length = block.getFieldValue('LENGTH');
-  var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+Blockly.JavaScript['jam_instrument'] = function(block) {
+  var instrument = block.getFieldValue('instrument_selection');
+  var dropdown_clef_selection = block.getFieldValue('clef_selection');
+  var branch = Blockly.JavaScript.statementToCode(block, 'MEASURE');
   // TODO: Assemble JavaScript into code variable.
-  var code = 'MIDI.loadPlugin({ ' + 
-		'soundfontUrl: "../js/midijs/examples/soundfont/",' +
-		'instrument: "acoustic_grand_piano", ' +
-		'onprogress: function(state, progress) {console.log(state, progress);}, ' +
-		'onsuccess: function() { ' + 
+  var code ='MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +
+			branch;
+  return code;
+};
+
+Blockly.JavaScript['jam_note'] = function(block) {
+  var note = block.getFieldValue('NOTE');
+  var register = block.getFieldValue('REGISTER');
+  var volume = block.getFieldValue('VOLUME');
+  var length = block.getFieldValue('LENGTH');
+  // TODO: Assemble JavaScript into code variable.
+  var code =
 			'var delay = 0; ' + // play one note every quarter second
 			'var note = 50; ' + // the MIDI note
 			'var velocity = 127; ' + // how hard the note hits
 			// play the note
 			'MIDI.setVolume(0, 127);' +
 			'MIDI.noteOn(0, note, velocity, delay);' +
-			'MIDI.noteOff(0, note, delay + 0.75);}});'
-  // TODO: Change ORDER_NONE to the correct strength.
-  return [code, Blockly.JavaScript.ORDER_NONE];
+			'MIDI.noteOff(0, note, delay + 0.75);'
+  return code;
 };
-

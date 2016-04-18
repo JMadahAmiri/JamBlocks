@@ -34,12 +34,13 @@ Blockly.Blocks['jam_measure'] = {
         .appendField("Time Signature")
         .appendField(new Blockly.FieldDropdown([["4/4", "FOURFOUR"], ["3/4", "THREEFOUR"]]), "TIME_SIG");
     this.appendValueInput("CONTAINTER")
-        .setCheck("container")
+        .setCheck("jam_container")
         .appendField("Containter");
-    this.appendValueInput("NOTES")
+    this.appendStatementInput("NAME")
         .setCheck("jam_note")
         .appendField("Notes");
-    this.setOutput(true, null);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
     this.setColour(270);
     this.setTooltip('');
     this.setHelpUrl('http://www.example.com/');
@@ -50,20 +51,13 @@ Blockly.Blocks['jam_instrument'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Instrument")
-        .appendField(new Blockly.FieldDropdown([["Piano", "PIANO"], ["Trumpet", "TRUMPET"], ["Flute", "FLUTE"]]), "instrument_selection");
+        .appendField(new Blockly.FieldDropdown([["Piano", "acoustic_grand_piano"], ["Trumpet", "trumpet"], ["Flute", "flute"]]), "instrument_selection");
     this.appendDummyInput()
         .appendField("Clef")
         .appendField(new Blockly.FieldDropdown([["Treble", "TREBLE"], ["Bass", "BASS"]]), "clef_selection");
-    this.appendDummyInput()
-        .appendField("Time Signature")
-        .appendField(new Blockly.FieldDropdown([["4/4", "FOURFOUR"], ["3/4", "THREEFOUR"]]), "TIME_SIG");
-    this.appendValueInput("CONTAINTER")
-        .setCheck("container")
-        .appendField("Containter");
-    this.appendValueInput("NOTES")
-        .setCheck("jam_note")
-        .appendField("Notes");
-    this.setOutput(true, null);
+    this.appendStatementInput("MEASURE")
+        .setCheck("jam_measure")
+        .appendField("Measure(s)");
     this.setInputsInline(false);
     this.setColour(0);
     this.setTooltip('');
@@ -75,7 +69,7 @@ Blockly.Blocks['jam_note'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Note")
-        .appendField(new Blockly.FieldDropdown([["A", "P_A"], ["B", "P_B"], ["C", "P_C"]]), "NOTE");
+        .appendField(new Blockly.FieldDropdown([["A", "N_A"], ["B", "N_B"], ["C", "N_C"], ["D", "N_D"], ["E", "N_E"], ["F", "N_F"], ["G", "N_G"]]), "NOTE");
     this.appendDummyInput()
         .appendField("Register")
         .appendField(new Blockly.FieldDropdown([["High", "HIGH"], ["Middle", "MIDDLE"], ["Low", "LOW"]]), "REGISTER");
@@ -84,12 +78,10 @@ Blockly.Blocks['jam_note'] = {
         .appendField(new Blockly.FieldDropdown([["100", "V_100"], ["90", "V_90"], ["80", "V_80"]]), "VOLUME");
     this.appendDummyInput()
         .appendField("Length")
-        .appendField(new Blockly.FieldDropdown([["1/8", "EIGHTH"], ["1/4", "QUARTER"], ["1/2", "HALF"]]), "LENGTH");
-    this.appendValueInput("NAME")
-        .setCheck("jam_note")
-        .appendField("Note");
-    this.setInputsInline(false);
-    this.setOutput(true, null);
+        .appendField(new Blockly.FieldDropdown([["1/8", "EIGHTH"], ["1/4", "QUARTER"], ["1/2", "HALF"], ["1", "WHOLE"], ["Rest", "REST"]]), "LENGTH");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
     this.setColour(90);
     this.setTooltip('');
     this.setHelpUrl('http://www.example.com/');
