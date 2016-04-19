@@ -24,7 +24,6 @@
  */
 'use strict';
 goog.require('Blockly.JavaScript');
-var delay = 0;
 
 Blockly.JavaScript['jam_measure'] = function(block) {
   var dropdown_time_sig = block.getFieldValue('TIME_SIG');
@@ -41,9 +40,9 @@ Blockly.JavaScript['jam_instrument'] = function(block) {
   var branch = Blockly.JavaScript.statementToCode(block, 'MEASURE');
   // TODO: Assemble JavaScript into code variable.
   
-  var code ='MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +
-			branch +
-			'delay = 0;';
+  var code ='var delay = 0; '+ 
+			'MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +
+			branch;
   return code;
 };
 
@@ -51,20 +50,46 @@ Blockly.JavaScript['jam_note'] = function(block) {
   var note = block.getFieldValue('NOTE');
   var register = block.getFieldValue('REGISTER');
   var key = note + register;
-var number = 60; //Start from middle C(C4) and move from there to the note number;
-if(register == 5){
-	number += 12; //Move up one octave
-}
-else if(register == 3){
-	number -= 12; //Move down one octave
-} 
-
-  var volume = block.getFieldValue('VOLUME');
+  var number = 60; //Start from middle C(C4) and move from there to the note number;
+  var velocity = block.getFieldValue('VOLUME');
   var length = block.getFieldValue('LENGTH');
-  // TODO: Assemble JavaScript into code variable.
+  if(register == 5){
+		number += 12; //Move up one octave
+	}
+	else if(register == 3){
+		number -= 12; //Move down one octave
+	}
+//Move the Note Number based on the Note
+switch(note) {
+	case 'A': number += 9;
+			break;
+	case 'AS': number +=10;
+			break;
+	case 'B': number += 11;
+			break;
+	case 'CS': number += 1;
+			break;
+	case 'D': number += 2;
+			break;
+	case 'DS': number += 3;
+			break;
+	case 'E': number += 4;
+			break;
+	case 'F': number += 5;
+			break;
+	case 'FS': number += 6;
+			break;
+	case 'G': number += 7;
+			break;
+	case 'GS': number += 8;
+			break;
+	case 'R': velocity = 0;
+			break;
+	default: break;
+}
   var code =
 			'var note = ' + number + '; ' + // the MIDI note
-			'var velocity = 127; ' + // how hard the note hits
+			'var velocity = ' + velocity + '; ' + // how hard the note hits
 			// play the note
 			'MIDI.setVolume(0, 127);' +
 			'MIDI.noteOn(0, note, velocity, delay);' +
