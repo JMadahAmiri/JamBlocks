@@ -36,7 +36,7 @@ Blockly.Blocks['jam_measure'] = {
     this.appendValueInput("CONTAINTER")
         .setCheck("jam_container")
         .appendField("Containter");
-    this.appendStatementInput("NAME")
+    this.appendStatementInput("NOTES")
         .setCheck("jam_note")
         .appendField("Notes");
     this.setPreviousStatement(true, null);
@@ -78,7 +78,7 @@ Blockly.Blocks['jam_note'] = {
         .appendField(new Blockly.FieldDropdown([["100", "100"], ["90", "90"], ["80", "80"], ["70", "70"], ["60", "60"],["50", "50"],["40", "40"],["30", "30"],["20", "20"],["10", "10"],["0", "0"],]), "VOLUME");
     this.appendDummyInput()
         .appendField("Length")
-        .appendField(new Blockly.FieldDropdown([["1/8", "EIGHTH"], ["1/4", "QUARTER"], ["1/2", "HALF"], ["1", "WHOLE"]]), "LENGTH");
+        .appendField(new Blockly.FieldDropdown([["1/8", ".25"], ["1/4", ".75"], ["1/2", "1.5"], ["1", "3"]]), "LENGTH");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);

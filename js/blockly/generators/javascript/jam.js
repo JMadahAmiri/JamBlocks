@@ -26,19 +26,19 @@
 goog.require('Blockly.JavaScript');
 
 Blockly.JavaScript['jam_measure'] = function(block) {
-  var dropdown_time_sig = block.getFieldValue('TIME_SIG');
-  var value_containter = Blockly.JavaScript.valueToCode(block, 'CONTAINTER', Blockly.JavaScript.ORDER_ATOMIC);
-  var statements_name = Blockly.JavaScript.statementToCode(block, 'NAME');
+  var time = block.getFieldValue('TIME_SIG');
+  var containter = Blockly.JavaScript.valueToCode(block, 'CONTAINTER', Blockly.JavaScript.ORDER_ATOMIC);
+  var branch = Blockly.JavaScript.statementToCode(block, 'NOTES');
   // TODO: Assemble JavaScript into code variable.
-  var code = '...;\n';
+  var code = 'var time = "' + time + '";' +
+			 branch;
   return code;
 };
 
 Blockly.JavaScript['jam_instrument'] = function(block) {
   var instrument = block.getFieldValue('instrument_selection');
-  var dropdown_clef_selection = block.getFieldValue('clef_selection');
+  var clef = block.getFieldValue('clef_selection');
   var branch = Blockly.JavaScript.statementToCode(block, 'MEASURE');
-  // TODO: Assemble JavaScript into code variable.
   
   var code ='var delay = 0; '+ 
 			'MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +
@@ -51,7 +51,7 @@ Blockly.JavaScript['jam_note'] = function(block) {
   var register = block.getFieldValue('REGISTER');
   var key = note + register;
   var number = 60; //Start from middle C(C4) and move from there to the note number;
-  var velocity = block.getFieldValue('VOLUME');
+  var volume = block.getFieldValue('VOLUME');
   var length = block.getFieldValue('LENGTH');
   if(register == 5){
 		number += 12; //Move up one octave
@@ -83,17 +83,17 @@ switch(note) {
 			break;
 	case 'GS': number += 8;
 			break;
-	case 'R': velocity = 0;
+	case 'R': volume = 0;
 			break;
 	default: break;
 }
   var code =
 			'var note = ' + number + '; ' + // the MIDI note
-			'var velocity = ' + velocity + '; ' + // how hard the note hits
+			'var velocity = 127;' + // how hard the note hits
 			// play the note
-			'MIDI.setVolume(0, 127);' +
+			'MIDI.setVolume(0, ' + volume + ');' +
 			'MIDI.noteOn(0, note, velocity, delay);' +
-			'MIDI.noteOff(0, note, delay + 0.75);' +
-			'delay++;'
+			'MIDI.noteOff(0, note, delay + ' + length + ');' +
+			'delay += ' + length + ';'
   return code;
 };
