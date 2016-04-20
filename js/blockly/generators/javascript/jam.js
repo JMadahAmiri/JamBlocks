@@ -53,10 +53,14 @@ Blockly.JavaScript['jam_note'] = function(block) {
   var number = 60; //Start from middle C(C4) and move from there to the note number;
   var volume = block.getFieldValue('VOLUME');
   var length = block.getFieldValue('LENGTH');
-  if(register == 5){
+  var nextnote = length;
+  if(length == 3) {
+	  nextnote -= .6 //Fixes Whole Note delay
+  }
+  if(register == 5) {
 		number += 12; //Move up one octave
 	}
-	else if(register == 3){
+	else if(register == 3) {
 		number -= 12; //Move down one octave
 	}
 //Move the Note Number based on the Note
@@ -94,6 +98,6 @@ switch(note) {
 			'MIDI.setVolume(0, ' + volume + ');' +
 			'MIDI.noteOn(0, note, velocity, delay);' +
 			'MIDI.noteOff(0, note, delay + ' + length + ');' +
-			'delay += ' + length + ';'
+			'delay += ' + nextnote + ';'
   return code;
 };
