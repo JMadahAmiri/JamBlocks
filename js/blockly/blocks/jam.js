@@ -33,9 +33,6 @@ Blockly.Blocks['jam_measure'] = {
     this.appendDummyInput()
         .appendField("Time Signature")
         .appendField(new Blockly.FieldDropdown([["4/4", "FOURFOUR"], ["3/4", "THREEFOUR"]]), "TIME_SIG");
-    this.appendValueInput("CONTAINTER")
-        .setCheck("jam_container")
-        .appendField("Containter");
     this.appendStatementInput("NOTES")
         .setCheck("jam_note")
         .appendField("Notes");
@@ -51,7 +48,9 @@ Blockly.Blocks['jam_instrument'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Instrument")
-        .appendField(new Blockly.FieldDropdown([["Piano", "acoustic_grand_piano"], ["Trumpet", "trumpet"], ["Flute", "flute"]]), "instrument_selection");
+        .appendField(new Blockly.FieldDropdown([["Piano", "acoustic_grand_piano"], ["Accordion", "accordion"], ["Acoustic Bass", "acoustic_bass"], ["Acoustic Guitar", "acoustic_guitar_nylon"], ["Banjo", "banjo"], 
+												["Cello", "cello"], ["Clarinet", "clarinet"], ["Fiddle", "fiddle"], ["Flute", "flute"], ["Harmonica", "harmonica"], ["Harpsichord", "harpsichord"], ["Ocarina", "ocarina"], 
+												["Saxophone", "tenor_sax"], ["Trumpet", "trumpet"], ["Tuba", "tuba"], ["Violin", "violin"]]), "instrument_selection");
     this.appendDummyInput()
         .appendField("Clef")
         .appendField(new Blockly.FieldDropdown([["Treble", "TREBLE"], ["Bass", "BASS"]]), "clef_selection");

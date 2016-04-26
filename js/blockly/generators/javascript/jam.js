@@ -24,14 +24,13 @@
  */
 'use strict';
 goog.require('Blockly.JavaScript');
-
+var time;
 Blockly.JavaScript['jam_measure'] = function(block) {
-  var time = block.getFieldValue('TIME_SIG');
+  time = block.getFieldValue('TIME_SIG');
   var containter = Blockly.JavaScript.valueToCode(block, 'CONTAINTER', Blockly.JavaScript.ORDER_ATOMIC);
   var branch = Blockly.JavaScript.statementToCode(block, 'NOTES');
-  // TODO: Assemble JavaScript into code variable.
   var code = 'var time = "' + time + '";' +
-			 branch;
+			  branch;
   return code;
 };
 
@@ -40,8 +39,8 @@ Blockly.JavaScript['jam_instrument'] = function(block) {
   var clef = block.getFieldValue('clef_selection');
   var branch = Blockly.JavaScript.statementToCode(block, 'MEASURE');
   
-  var code ='var delay = 0; '+ 
-			'MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +
+  var code ='var delay = 0;' +
+			'MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +	
 			branch;
   return code;
 };
@@ -49,13 +48,18 @@ Blockly.JavaScript['jam_instrument'] = function(block) {
 Blockly.JavaScript['jam_note'] = function(block) {
   var note = block.getFieldValue('NOTE');
   var register = block.getFieldValue('REGISTER');
-  var key = note + register;
   var number = 60; //Start from middle C(C4) and move from there to the note number;
   var volume = block.getFieldValue('VOLUME');
   var length = block.getFieldValue('LENGTH');
   var nextnote = length;
-  if(length == 3) {
-	  nextnote -= .6 //Fixes Whole Note delay
+  if(length == 3) { //Change whole note length based on time signature
+	if(time == 'FOURFOUR'){
+		nextnote -= .6; //Fixes Whole Note delay
+	}
+	else if(time == 'THREEFOUR') {
+		length = 2.25;
+		nextnote = length;
+	}
   }
   if(register == 5) {
 		number += 12; //Move up one octave
@@ -91,8 +95,7 @@ switch(note) {
 			break;
 	default: break;
 }
-  var code =
-			'var note = ' + number + '; ' + // the MIDI note
+  var code ='var note = ' + number + '; ' + // the MIDI note
 			'var velocity = 127;' + // how hard the note hits
 			// play the note
 			'MIDI.setVolume(0, ' + volume + ');' +
