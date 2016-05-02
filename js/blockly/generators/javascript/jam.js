@@ -55,6 +55,9 @@ Blockly.JavaScript['jam_instrument'] = function(block) {
 			'var vexFormatter = new Vex.Flow.Formatter();' +
 			'MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +	
 			'var canvas = $("#yoy")[0];' +
+			'var c=document.getElementById("yoy");' +
+			'var ctx=c.getContext("2d");' +
+			'ctx.clearRect(0, 0, canvas.width, canvas.height);' +
 			'var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);' +
 			'var ctx = renderer.getContext();' +
 			'var vexStave = new Vex.Flow.Stave(10,0,500);' +
