@@ -68,7 +68,7 @@ Blockly.Blocks['jam_note'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Note")
-        .appendField(new Blockly.FieldDropdown([["A", "A"], ["A#", "AS"], ["B", "B"], ["C", "C"], ["C#", "CS"], ["D", "D"], ["D#", "DS"], ["E", "E"], ["F", "F"], ["F#", "FS"], ["G", "G"], ["G#", "GS"], ["Rest", "R"]]), "NOTE");
+        .appendField(new Blockly.FieldDropdown([["A", "A"], ["A#", "A\#"], ["B", "B"], ["C", "C"], ["C#", "C\#"], ["D", "D"], ["D#", "D\#"], ["E", "E"], ["F", "F"], ["F#", "F\#"], ["G", "G"], ["G#", "G\#"], ["Rest", "R"]]), "NOTE");
     this.appendDummyInput()
         .appendField("Register")
         .appendField(new Blockly.FieldDropdown([["High", "5"], ["Middle", "4"], ["Low", "3"]]), "REGISTER");

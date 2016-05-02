@@ -29,8 +29,16 @@ Blockly.JavaScript['jam_measure'] = function(block) {
   time = block.getFieldValue('TIME_SIG');
   var containter = Blockly.JavaScript.valueToCode(block, 'CONTAINTER', Blockly.JavaScript.ORDER_ATOMIC);
   var branch = Blockly.JavaScript.statementToCode(block, 'NOTES');
+  var vexNum = 4;
+  var vexBeats = 4;
+  if(time == 'THREEFOUR') {
+	vexNum = 3;
+  }
   var code = 'var time = "' + time + '";' +
-			  branch;
+  'var vexBeats =' + vexBeats + ';' +
+			'var vexTempo = 0;' +
+			'var vexVoice = new Vex.Flow.Voice({ num_beats: ' + vexNum + ', beat_value:' + vexBeats + ', resolution: Vex.Flow.RESOLUTION});' +
+			 branch;
   return code;
 };
 
@@ -40,8 +48,23 @@ Blockly.JavaScript['jam_instrument'] = function(block) {
   var branch = Blockly.JavaScript.statementToCode(block, 'MEASURE');
   
   var code ='var delay = 0;' +
+			'var vexKey = [];' +
+			'var vexDuration = [];' +
+			'var vexNotes = [];' +
+			'var vexClef = \'' + clef + '\';' +			
+			'var vexFormatter = new Vex.Flow.Formatter();' +
 			'MIDI.programChange(0, MIDI.GM.byName["' + instrument + '"].number);' +	
-			branch;
+			'var canvas = $("#yoy")[0];' +
+			'var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);' +
+			'var ctx = renderer.getContext();' +
+			'var vexStave = new Vex.Flow.Stave(10,0,500);' +
+			'var voiceDuration = 0; /*(up to vexBeats)*/' +
+			branch + 
+			'vexStave.addClef(vexClef.toLowerCase()).setContext(ctx).draw();' +
+			'if(vexTempo % vexBeats == 0 && vexTempo != 0){vexVoice.addTickables(vexNotes);' +
+			'var beams = Vex.Flow.Beam.applyAndGetBeams(vexVoice);' +
+			'vexFormatter.joinVoices([vexVoice]).format([vexVoice], 500);' +
+			'vexVoice.draw(ctx,vexStave);}';
   return code;
 };
 
@@ -52,6 +75,9 @@ Blockly.JavaScript['jam_note'] = function(block) {
   var volume = block.getFieldValue('VOLUME');
   var length = block.getFieldValue('LENGTH');
   var nextnote = length;
+  var duration = 'q';
+  var tempo;
+  var vexKey = note + '/' + register;
   if(length == 3) { //Change whole note length based on time signature
 	if(time == 'FOURFOUR'){
 		nextnote -= .6; //Fixes Whole Note delay
@@ -67,35 +93,54 @@ Blockly.JavaScript['jam_note'] = function(block) {
 	else if(register == 3) {
 		number -= 12; //Move down one octave
 	}
+	
+	switch(length)
+	{
+	case '.25': duration = '8'; tempo = .5;
+		break;
+	case '.75': duration = 'q'; tempo = 1;
+		break;
+	case '1.5': duration = 'h'; tempo = 2;
+		break;
+	case '3': duration = 'w'; tempo = 4;
+		break;	
+	default : break;
+}
+	if(note== 'R')
+		duration += 'r';
 //Move the Note Number based on the Note
 switch(note) {
 	case 'A': number += 9;
 			break;
-	case 'AS': number +=10;
+	case 'A\#': number +=10;
 			break;
 	case 'B': number += 11;
 			break;
-	case 'CS': number += 1;
+	case 'C\#': number += 1;
 			break;
 	case 'D': number += 2;
 			break;
-	case 'DS': number += 3;
+	case 'D\#': number += 3;
 			break;
 	case 'E': number += 4;
 			break;
 	case 'F': number += 5;
 			break;
-	case 'FS': number += 6;
+	case 'F\#': number += 6;
 			break;
 	case 'G': number += 7;
 			break;
-	case 'GS': number += 8;
+	case 'G\#': number += 8;
 			break;
 	case 'R': volume = 0;
 			break;
 	default: break;
 }
-  var code ='var note = ' + number + '; ' + // the MIDI note
+  var code ='vexDuration.push(\'' + duration + '\');' + //Vexcode inputs for notes
+			'vexKey.push(\'' + vexKey + '\');' +
+			'vexNotes.push(new Vex.Flow.StaveNote({keys: ["' + vexKey + '"], duration: "' + duration + '"}));' +
+			'vexTempo+=' + tempo + ';' +
+			'var note = ' + number + '; ' + // the MIDI note
 			'var velocity = 127;' + // how hard the note hits
 			// play the note
 			'MIDI.setVolume(0, ' + volume + ');' +
